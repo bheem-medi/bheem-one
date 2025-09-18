@@ -11,12 +11,14 @@ public class OrderDAO {
     public int createOrder(Order order) {
         String orderSql = "INSERT INTO orders (customer_name, customer_phone, customer_address, total_amount) " +
                          "VALUES (?, ?, ?, ?)";
-        String itemSql = "INSERT INTO order_items (order_id, menu_item_id, quantity, price) " +
-                        "VALUES (?, ?, ?, ?)";
+        String itemSql = "INSERT INTO order_items (order_id, menu_item_id, item_name, quantity, price) " +
+                        "VALUES (?, ?, ?, ?, ?)";
         
         int orderId = 0;
+        Connection conn = null;
         
-        try (Connection conn = DatabaseUtil.getConnection()) {
+        try {
+            conn = DatabaseUtil.getConnection();
             conn.setAutoCommit(false);
             
             // Insert order
@@ -44,8 +46,9 @@ public class OrderDAO {
                     for (OrderItem item : items) {
                         pstmt.setInt(1, orderId);
                         pstmt.setInt(2, item.getMenuItemId());
-                        pstmt.setInt(3, item.getQuantity());
-                        pstmt.setDouble(4, item.getPrice());
+                        pstmt.setString(3, item.getItemName());
+                        pstmt.setInt(4, item.getQuantity());
+                        pstmt.setDouble(5, item.getPrice());
                         pstmt.addBatch();
                     }
                     pstmt.executeBatch();
@@ -57,7 +60,22 @@ public class OrderDAO {
             }
             
         } catch (SQLException e) {
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         
         return orderId;
