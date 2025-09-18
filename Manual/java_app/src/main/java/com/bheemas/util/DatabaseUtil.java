@@ -15,20 +15,41 @@ public class DatabaseUtil {
             return connection;
         } else {
             try {
-                Properties prop = new Properties();
-                InputStream inputStream = DatabaseUtil.class.getClassLoader()
-                        .getResourceAsStream("database.properties");
-                prop.load(inputStream);
+                // First try to get from environment variables (for Docker)
+                String dbUrl = System.getenv("DB_URL");
+                String dbUser = System.getenv("DB_USER");
+                String dbPassword = System.getenv("DB_PASSWORD");
                 
-                String driver = prop.getProperty("driver");
-                String url = prop.getProperty("url");
-                String user = prop.getProperty("user");
-                String password = prop.getProperty("password");
+                // If not found in environment, try properties file (for local development)
+                if (dbUrl == null || dbUser == null || dbPassword == null) {
+                    try {
+                        Properties prop = new Properties();
+                        InputStream inputStream = DatabaseUtil.class.getClassLoader()
+                                .getResourceAsStream("database.properties");
+                        
+                        if (inputStream != null) {
+                            prop.load(inputStream);
+                            dbUrl = prop.getProperty("url");
+                            dbUser = prop.getProperty("user");
+                            dbPassword = prop.getProperty("password");
+                        }
+                    } catch (IOException e) {
+                        System.out.println("database.properties not found, using environment variables");
+                    }
+                }
                 
-                Class.forName(driver);
-                connection = DriverManager.getConnection(url, user, password);
-            } catch (ClassNotFoundException | SQLException | IOException e) {
+                // Default values if nothing is configured
+                if (dbUrl == null) dbUrl = "jdbc:mysql://localhost:3306/bheemas_food_truck";
+                if (dbUser == null) dbUser = "appuser";
+                if (dbPassword == null) dbPassword = "apppassword";
+                
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+                System.out.println("Database connection established to: " + dbUrl);
+                
+            } catch (ClassNotFoundException | SQLException e) {
                 e.printStackTrace();
+                throw new RuntimeException("Database connection failed: " + e.getMessage());
             }
             return connection;
         }
