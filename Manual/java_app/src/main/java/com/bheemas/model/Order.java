@@ -14,6 +14,17 @@ public class Order {
     
     public Order() {}
     
+    // Parameterized constructor
+    public Order(String customerName, String customerPhone, String customerAddress, 
+                double totalAmount, List<OrderItem> items) {
+        this.customerName = customerName;
+        this.customerPhone = customerPhone;
+        this.customerAddress = customerAddress;
+        this.totalAmount = totalAmount;
+        this.items = items;
+        this.orderDate = new Date();
+    }
+    
     // Getters and Setters
     public int getOrderId() { return orderId; }
     public void setOrderId(int orderId) { this.orderId = orderId; }
@@ -35,27 +46,4 @@ public class Order {
     
     public List<OrderItem> getItems() { return items; }
     public void setItems(List<OrderItem> items) { this.items = items; }
-}
-
-// Make OrderItem a public class so it can be accessed from other packages
-class OrderItem {
-    private int menuItemId;
-    private String itemName;
-    private int quantity;
-    private double price;
-    
-    public OrderItem() {}
-    
-    // Getters and Setters
-    public int getMenuItemId() { return menuItemId; }
-    public void setMenuItemId(int menuItemId) { this.menuItemId = menuItemId; }
-    
-    public String getItemName() { return itemName; }
-    public void setItemName(String itemName) { this.itemName = itemName; }
-    
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
-    
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
 }
