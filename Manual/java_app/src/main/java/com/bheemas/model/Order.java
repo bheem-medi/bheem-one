@@ -37,6 +37,7 @@ public class Order {
     public void setItems(List<OrderItem> items) { this.items = items; }
 }
 
+// Make OrderItem a public class so it can be accessed from other packages
 class OrderItem {
     private int menuItemId;
     private String itemName;
