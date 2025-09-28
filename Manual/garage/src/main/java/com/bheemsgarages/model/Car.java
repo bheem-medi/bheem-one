@@ -1,65 +1,49 @@
+package com.bheemsgarages.model;
 
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+public class Car {
+    private String id;
+    private String name;
+    private String brand;
+    private String type;
+    private double weekPrice;
+    private double monthPrice;
+    private String imageUrl;
+    private String description;
     
-    <groupId>com.bheemsgarages</groupId>
-    <artifactId>bheems-garages</artifactId>
-    <version>1.0.0</version>
-    <packaging>war</packaging>
+    public Car(String id, String name, String brand, String type, 
+               double weekPrice, double monthPrice, String imageUrl, String description) {
+        this.id = id;
+        this.name = name;
+        this.brand = brand;
+        this.type = type;
+        this.weekPrice = weekPrice;
+        this.monthPrice = monthPrice;
+        this.imageUrl = imageUrl;
+        this.description = description;
+    }
     
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    // Getters and Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
     
-    <dependencies>
-        <!-- Servlet API -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- JSTL -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-        
-        <!-- JSP API -->
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>javax.servlet.jsp-api</artifactId>
-            <version>2.3.3</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
     
-    <build>
-        <finalName>bheems-garages</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.2.3</version>
-            </plugin>
-        </plugins>
-    </build>
-</project>
+    public String getBrand() { return brand; }
+    public void setBrand(String brand) { this.brand = brand; }
+    
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    
+    public double getWeekPrice() { return weekPrice; }
+    public void setWeekPrice(double weekPrice) { this.weekPrice = weekPrice; }
+    
+    public double getMonthPrice() { return monthPrice; }
+    public void setMonthPrice(double monthPrice) { this.monthPrice = monthPrice; }
+    
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+}
