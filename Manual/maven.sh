@@ -8,4 +8,5 @@ echo 'export M2_HOME=/opt/maven' | sudo tee -a /etc/profile.d/maven.sh
 echo 'export PATH=${M2_HOME}/bin:${PATH}' | sudo tee -a /etc/profile.d/maven.sh
 sudo chmod +x /etc/profile.d/maven.sh
 source /etc/profile.d/maven.sh
+sudo ln -s /opt/maven/bin/mvn /usr/bin/mvn
 mvn -version
