@@ -1,30 +1,44 @@
 pipeline{
     agent any
     stages{
-        // stage1: code pull from github repo
         stage('code checkout'){
             steps{
-                git branch: 'main', 'url': 'https://github.com/bheem-medi/bheem-one.git'
+                git branch: 'main', url: 'https://github.com/bheem-medi/bheem-one.git'
             }
         }
-        stage('BUILD with maven'){
+        stage('Build with MVN'){
             steps{
                 dir('Manual/garage'){
-                sh 'mvn clean package'
+                    sh 'mvn clean package'
                 }
             }
         }
-        stage('code quality anaysis'){
+        stage('sonarqube analysis'){
             steps{
-                 dir('Manual/garage'){
-                       withSonarQubeEnv('jenkins-sonar'){
-                            sh ''' 
-                                mvn sonar:sonar \
-                                -Dsonar.projectKey=car-rent \
-                                -Dsonar.projectName="car-renatl application" 
-                            '''
-                       }
-                 }
+                dir('Manual/garage'){
+                    withSonarQubeEnv('jenkins-sonar'){
+                        sh '''
+                            mvn sonar:sonar \
+                            -Dsonar.projectKey=car-rental \
+                            -Dsonar.projectName="car-rental-application"
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Code quality analysis'){
+            steps{
+                dir('Manual/garage'){
+                    script{
+                        try {
+                            timeout(time: 2, unit: 'MINUTES') {
+                                waitForQualityGate abortPipeline: false
+                            }
+                        } catch (Exception e) {
+                                echo "SonarQube timeout - Continuing deployment anyway"
+                        }
+                    }
+                }
             }
         }
     }
