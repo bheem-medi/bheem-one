@@ -1,5 +1,8 @@
 pipeline{
     agent any
+    tools {
+        maven 'jenkins-maven'
+    }
     stages{
         stage('code checkout'){
             steps{
