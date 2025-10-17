@@ -1,5 +1,4 @@
 # Generate an SSH key pair (private + public)
-
 resource "tls_private_key" "pemkey" {
     algorithm = "RSA"
     rsa_bits = 4096
@@ -10,6 +9,13 @@ resource "aws_key_pair" "key_local" {
     key_name = "terra_key_pair"  ## Not the local name, it is name which we provide while creating the pem file in aws
     public_key = tls_private_key.pemkey.public_key_openssh
 }
+
+# Use your existing key pair (no tls_private_key resource)
+resource "aws_key_pair" "key_local" {
+    key_name   = "terra_key_pair"
+    public_key = file("${path.module}/terra_key_pair.pub")  # Reference your existing public key
+}
+
 
 resource "aws_instance" "terra_ec2" {
    ami = "ami-0b09ffb6d8b58ca91"
