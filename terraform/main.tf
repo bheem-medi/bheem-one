@@ -20,6 +20,7 @@ resource "aws_key_pair" "key_local" {
 resource "aws_instance" "terra_ec2" {
    ami = "ami-0b09ffb6d8b58ca91"
    instance_type = "t2.micro"
+   vpc_security_group_ids = [aws_security_group.ssh_access.id]
    key_name = aws_key_pair.key_local.key_name  # Take the value of the key_name attribute from the resource named key_local of type aws_key_pair.
    user_data = <<-EOF
               #!/bin/bash
@@ -44,4 +45,42 @@ resource "aws_instance" "terra_ec2" {
    }
 }
 
+
+# Add security group resource
+resource "aws_security_group" "ssh_access" {
+  name        = "ssh-access-sg"
+  description = "Allow SSH access"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow SSH from anywhere
+  }
+
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Jenkins
+  }
+
+  ingress {
+    from_port   = 9000
+    to_port     = 9000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # SonarQube
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "ssh-access"
+  }
+}
 
