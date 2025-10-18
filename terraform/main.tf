@@ -10,6 +10,14 @@ resource "aws_key_pair" "key_local" {
     public_key = tls_private_key.pemkey.public_key_openssh
 }
 
+# Save the private key to a local file
+resource "local_file" "private_key" {
+  content     = tls_private_key.pemkey.private_key_pem
+  filename    = "/Users/bheem_medi/Downloads/terra_key_pair.pem"
+  file_permission = "0400"
+}
+
+
 # Use your existing key pair (no tls_private_key resource)
 resource "aws_key_pair" "key_local" {
     key_name   = "terra_key_pair"
