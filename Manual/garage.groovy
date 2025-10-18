@@ -44,5 +44,36 @@ pipeline{
                 }
             }
         }
+        stage('Build DockerImage'){
+            steps{
+                dir('Manual/garage'){
+                    sh 'docker build -t bheem05/garage:garage_image .'
+                }
+            }
+        }
+        stage('Image Scan'){
+            steps{
+                sh 'trivy image bheem05/garage:garage_image'
+            }
+        }
+        stage('Deploy Container'){
+            steps{
+                script{
+                    sh '''
+                        # Stop old container if running
+                        docker stop garage-app || true
+                        docker rm garage-app || true
+                        
+                        # Run new container
+                        docker run -d \
+                            --name garage-app \
+                            -p 8081:8080 \
+                            bheem05/garage:garage_image
+                        
+                        echo "Container deployed successfully!"
+                    '''
+                }
+            }
+        }
     }
 }
